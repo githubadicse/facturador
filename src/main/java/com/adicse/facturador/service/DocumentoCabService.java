@@ -43,7 +43,7 @@ public class DocumentoCabService implements IAdicseService<DocumentoCab, String>
 	@Override
 	public DocumentoCab save(DocumentoCab entidad) {
 		// TODO Auto-generated method stub
-		return null;
+		return iDocumentoCabDao.save(entidad);
 	}
 
 	@Override

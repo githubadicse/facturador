@@ -1,9 +1,22 @@
 package com.adicse.facturador.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 /**
@@ -41,10 +54,12 @@ public class DocumentoCab implements Serializable {
 	@Column(name="dsc_tipo_documento_cliente")
 	private String dscTipoDocumentoCliente;
 
+	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_emision")
 	private Date fechaEmision;
 
+	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
@@ -82,7 +97,7 @@ public class DocumentoCab implements Serializable {
 	private ResumenBoleta resumenBoleta;
 
 	//bi-directional many-to-one association to DocumentoDetalle
-	@OneToMany(mappedBy="documentoCab")
+	@OneToMany(mappedBy="documentoCab", cascade={CascadeType.ALL})
 	private List<DocumentoDetalle> documentoDetalles;
 
 	public DocumentoCab() {

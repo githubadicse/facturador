@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 
 import com.adicse.facturador.dto.ControlProceso;
 import com.adicse.facturador.modelToJson.FacturaCab;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import freemarker.template.TemplateException;
@@ -36,6 +38,10 @@ public class FileComponent {
 
 	@Autowired
 	PropiedadesComponent propiedadesComponent;
+	
+	
+	@Autowired
+	ResumenBoletaComponent resumenBoletaComponent;	
 
 	private static final Logger log = LoggerFactory.getLogger(FileComponent.class);
 
@@ -237,46 +243,37 @@ public class FileComponent {
 				break;
 
 			case "RESUMENBOLETA":
+				List<FacturaCab> lstFacturaCabBoletas = new ArrayList<>();
 				for (String rowNombreArchivoJsonResumenBoleta : filesJson) {
-					archivo = rutaFilesJson + "\\" + rowNombreArchivoJsonResumenBoleta;
+						archivo = rutaFilesJson + "\\" + rowNombreArchivoJsonResumenBoleta;
 
-					try {
+						
+						log.info("procesando {}",  "Grabacion Fecha/Hora" + dateFormat.format(new Date()));
 
-						log.info("procesando {}", archivo + " Fecha/Hora" + dateFormat.format(new Date()));
-						facturaCab = new FacturaCab();
-						facturaCab = mapper.readValue(new File(archivo), FacturaCab.class);
+						try {
+							facturaCab = mapper.readValue(new File(archivo), FacturaCab.class);
+							
+							// filtramos solo los documento que inicion con B factura.
+							if (facturaCab.getTipoDocumento().getAbrDocumento().substring(0, 1).equals("B")) {
 
-						// filtramos solo los documento que inicion con F factura.
-						if (facturaCab.getTipoDocumento().getAbrDocumento().substring(0, 1).equals("B")) {
-
-							// Creamos el archivo XML
-
-							// log.info("Archivo JSON a procesar : {}", archivo + " Fecha/Hora" +
-							// dateFormat.format(new Date()));
-							try {
-
-								// CREAMOS FIRMAMOS Y ENVIAMOS LOS ARCHIVOS A LA SUNAT TIPO DE DOCUMENTOS
-								// FACTURAS
-								// RUTA AMPLIAMOS
-								String rutaArchivoXmlBoleta = rutaArchivoXml + "Boleta";
-								String rutaArchivoXmlRespuesta = rutaArchivoXml + "Respuesta";
-
-								serviciosCPE.crearXMLCPE21(facturaCab, rutaArchivoXmlBoleta, rutaArchivoFtl,
-										nombreArchivoFtl, rutaCertificado, nombreArchivoCertificado, passFirma, UsuSol,
-										PassSol, rutaArchivoXmlRespuesta);
-							} catch (TemplateException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								lstFacturaCabBoletas.add(facturaCab);
 							}
-
+							
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-					} catch (IOException e) {
-						e.getMessage();
-					}
+
 
 				}
+				
+				//enviamos la lista solo boletas para grabar
+				resumenBoletaComponent.saveResumenBoletaToModel(lstFacturaCabBoletas);
 
 				break;
+				
+				
+				
 
 			default:
 				break;

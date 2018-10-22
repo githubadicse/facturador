@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 import com.adicse.facturador.component.FileComponent;
+import com.adicse.facturador.component.MAINComponent;
 import com.adicse.facturador.dto.ControlProceso;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,6 +59,8 @@ public class FacturadorApplication implements CommandLineRunner {
 	@Autowired
 	FileComponent fileComponent; 
 	
+	@Autowired
+	MAINComponent mainComponent;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(FacturadorApplication.class, args);
@@ -72,8 +75,8 @@ public class FacturadorApplication implements CommandLineRunner {
 		// TODO Auto-generated method stub
 		
 		//recoge los archivos json para convertilos a xml ubl21 
-		fileComponent.setFileToModel("FACTURA");
 		
+		fileComponent.setFileToModel("RESUMENBOLETA");
 		
 //		String archivoXml = "D:\\proyectos\\generador archivos para facturador\\empresas\\20209098114\\fileXmlRespuesta\\R-20209098114-01-F003-00073618.XML";
 //		verificaXmlRespuestaSunat.verificarXmlRespuestaSunat(archivoXml);

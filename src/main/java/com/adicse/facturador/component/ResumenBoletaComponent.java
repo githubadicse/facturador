@@ -23,7 +23,7 @@ public class ResumenBoletaComponent {
 	private DocumentoCabService documentoCabService;
 	
 	
-	public Map<String,Object> saveResumenBoletaToModel(List<FacturaCab> lstFacturaCab){
+	public void saveResumenBoletaToModel(List<FacturaCab> lstFacturaCab){
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		
@@ -100,6 +100,8 @@ public class ResumenBoletaComponent {
 				documentoDetalle.setTotalVenta(rowFacturaDetalle.getImporteTotalVenta());
 				
 				
+				documentoDetalle.setCodigoProducto( Long.toString( rowFacturaDetalle.getProducto().getIdProducto()) );
+				
 				
 				sumaValorVenta = sumaValorVenta + rowFacturaDetalle.getBaseImponible();
 				sumaTotalDescuento = sumaTotalDescuento + rowFacturaDetalle.getTotalDescuento();
@@ -127,10 +129,7 @@ public class ResumenBoletaComponent {
 			
 			documentoCabService.save(documentoCab);
 			
-			
-			
-			
-			
+			lstDocumentoDetalle = new ArrayList<>();
 			
 			
 			
@@ -138,7 +137,7 @@ public class ResumenBoletaComponent {
 		
 		
 		
-		return map;
+		
 	}
 
 }

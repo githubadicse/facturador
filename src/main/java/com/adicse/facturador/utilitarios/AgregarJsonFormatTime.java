@@ -33,7 +33,7 @@ public class AgregarJsonFormatTime {
 
 	
 			List<TextoLine> list = createListLineasArchivo(archivoFuente);
-			list = createListLineasArchivoActualizarImport(list,"import com.adicse.comercial.shared.SqlTimeDeserializer");
+			list = createListLineasArchivoActualizarImport(list,"import com.adicse.utilitarios.SqlTimeDeserializer");
 			list = createListLineasArchivoActualizarImport(list,"import com.fasterxml.jackson.databind.annotation.JsonDeserialize");
 			
 			list = createListLineasArchivoAgregaFormato(list, "private Time ", "A");
