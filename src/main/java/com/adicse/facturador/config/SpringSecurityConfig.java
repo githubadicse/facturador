@@ -15,7 +15,7 @@ import com.adicse.facturador.config.auth.service.JWTService;
 import com.adicse.facturador.service.UsuarioService;
 
 
-@Configuration
+//@Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -51,7 +51,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure (AuthenticationManagerBuilder build) throws Exception {
 		
-		build.userDetailsService(usuarioService).passwordEncoder(passwordEncoder) ;
+		//build.userDetailsService(usuarioService).passwordEncoder(passwordEncoder) ;
 
 	}
 

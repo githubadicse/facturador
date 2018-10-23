@@ -72,7 +72,7 @@ public class ResumenBoletaComponent {
 			
 			documentoCab.setNombreCliente(facturaCab.getCliente().getRazonSocial());
 			documentoCab.setDireccionCliente(facturaCab.getCliente().getDireccion() );
-			
+			documentoCab.setTipoMoneda(facturaCab.getTipoMoneda());
 			
 			
 			/** Procesamos el detalle del documento **/
