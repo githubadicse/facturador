@@ -54,6 +54,7 @@ public class ResumenBoletaComponent {
 			documentoCab.setIdDocumentoCab(documento);
 			documentoCab.setFechaEmision(facturaCab.getFecha());
 			documentoCab.setFechaVencimiento(facturaCab.getFecha() );
+			documentoCab.setCodigoDocumentoSunat(documento);
 			
 			//03 boleta
 			documentoCab.setCodigoDocumentoSunat("03");

@@ -28,6 +28,9 @@ public class DocumentoCab implements Serializable {
 	@Column(name="codigo_tipo_documento_cliente")
 	private Integer codigoTipoDocumentoCliente;
 
+	@Column(name="comprobante_emitido_sunat")
+	private String comprobanteEmitidoSunat;
+
 	@Column(name="comprobante_numero")
 	private String comprobanteNumero;
 
@@ -125,6 +128,14 @@ public class DocumentoCab implements Serializable {
 
 	public void setCodigoTipoDocumentoCliente(Integer codigoTipoDocumentoCliente) {
 		this.codigoTipoDocumentoCliente = codigoTipoDocumentoCliente;
+	}
+
+	public String getComprobanteEmitidoSunat() {
+		return this.comprobanteEmitidoSunat;
+	}
+
+	public void setComprobanteEmitidoSunat(String comprobanteEmitidoSunat) {
+		this.comprobanteEmitidoSunat = comprobanteEmitidoSunat;
 	}
 
 	public String getComprobanteNumero() {

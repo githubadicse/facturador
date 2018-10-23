@@ -15,12 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.userdetails.User;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.adicse.facturador.interf.IAdicseService;
@@ -33,7 +33,8 @@ import com.adicse.facturador.specification.Filter;
 
 @Service
 @Transactional
-public class UsuarioService implements IAdicseService<Usuario, Integer>, UserDetailsService {
+public class UsuarioService implements IAdicseService<Usuario, Integer> //**mUserDetailsService**// 
+	{
 	
 	@Autowired
 	private IUsuarioDao iUsuarioDao;
@@ -122,22 +123,22 @@ public class UsuarioService implements IAdicseService<Usuario, Integer>, UserDet
 		return iUsuarioDao.findAllByLogin(login);
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		if(username == null) {
-			logger.error("No Existe el usuario");
-			
-		}
-		String login = username;
-		Usuario usuario = iUsuarioDao.findAllByLogin(login);
-		
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		
-		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-		UserDetails user = new User(username, usuario.getClave(), usuario.getActivo() , true, true, true, authorities);
-		return user;
-	}
+//	@Override
+//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//		// TODO Auto-generated method stub
+//		if(username == null) {
+//			logger.error("No Existe el usuario");
+//			
+//		}
+//		String login = username;
+//		Usuario usuario = iUsuarioDao.findAllByLogin(login);
+//		
+//		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+//		
+//		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//		UserDetails user = new User(username, usuario.getClave(), usuario.getActivo() , true, true, true, authorities);
+//		return user;
+//	}
 
 	
 
