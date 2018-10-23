@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.adicse.facturador.cpe.model.CamposDetalle;
+import com.adicse.facturador.model.DocumentoCab;
 import com.adicse.facturador.modelToJson.FacturaCab;
 import com.adicse.facturador.modelToJson.FacturaDetalle;
 
@@ -143,22 +144,24 @@ public class ServiciosCPE {
 
 	/////// PROCEDIMIENTO PARA CREAR EL RESUMEN DE BOLETAS ///////////////
 
-	public void crearXMLCPE21ResumenBoleta(List<FacturaCab> lstFacturaCab, String rutaArchivoXml, String rutaArchivoFtl,
+	public void crearXMLCPE21ResumenBoleta(List<DocumentoCab> lstDocumentoCab, String rutaArchivoXml, String rutaArchivoFtl,
 			String nombreArchivoFtl, String rutaCertificado, String nombreArchivoCertificado, String passFirma,
 			String UsuSol, String PassSol, String RutaRta)
 
 			throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException,
 			TemplateException {
 
-		FacturaCab facturaCab = lstFacturaCab.get(0);
-		String ruc = facturaCab.getEmisorRuc();
+		SimpleDateFormat fd = new SimpleDateFormat("yyyy-MM-dd");
+		
+		DocumentoCab facturaCab = lstDocumentoCab.get(0);
+		String fechaEmision = fd.format(facturaCab.getFechaEmision()).replace("-", "") ;
+		String ruc = facturaCab.getNumeroDocumentoCliente();
 
-		String codigoSunat = facturaCab.getTipoDocumento().getAbrDocumento().substring(0, 1).equals("F") ? "01" : "03";
-		String td = facturaCab.getTipoDocumento().getAbrDocumento().substring(0, 1).equals("F") ? "F" : "B";
-		String documento = td + String.format("%03d", facturaCab.getSerie()) + "-"
-				+ String.format("%08d", facturaCab.getNumero());
+		String documento = "B" + String.format("%03d", facturaCab.getComprobanteSerie() ) + "-"
+				+ String.format("%08d", facturaCab.getComprobanteNumero() );
 
-		String nombreArchivo = ruc + "-" + codigoSunat + "-" + documento ;
+		String nombreArchivo = "RC" + fechaEmision + "00001";
+		
 		File fileXml = new File(rutaArchivoXml + "/" + nombreArchivo + ".xml");
 		
 		
@@ -178,7 +181,7 @@ public class ServiciosCPE {
 		cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 
 		// Instantiate template
-		// Template template = cfg.getTemplate("xmlCPE.ftl");
+		// Template template = cfg.getTemplate("resumenDiarioXmlUbl20.ftl");
 		Template template = cfg.getTemplate(nombreArchivoFtl);
 
 		/** ---------- Fin definicion del archivo plantilla ------------ **/
@@ -188,7 +191,7 @@ public class ServiciosCPE {
 		Writer file = new FileWriter(new File(rutaArchivoXml + "/" + nombreArchivo));
 
 		Map<String, Object> map = new HashMap<>();
-		for (FacturaCab rowFacturaCab : lstFacturaCab) {
+		for (DocumentoCab rowDocumentoCab : lstDocumentoCab) {
 			// Obetnemos los datos de la cabecera 
 
 			

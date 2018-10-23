@@ -20,6 +20,9 @@ public class ResumenBoleta implements Serializable {
 	@Column(name="id_resumen_boleta")
 	private String idResumenBoleta;
 
+	@Column(name="estado_respuesta_sunat")
+	private Integer estadoRespuestaSunat;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_generacion")
 	private Date fechaGeneracion;
@@ -37,6 +40,14 @@ public class ResumenBoleta implements Serializable {
 
 	public void setIdResumenBoleta(String idResumenBoleta) {
 		this.idResumenBoleta = idResumenBoleta;
+	}
+
+	public Integer getEstadoRespuestaSunat() {
+		return this.estadoRespuestaSunat;
+	}
+
+	public void setEstadoRespuestaSunat(Integer estadoRespuestaSunat) {
+		this.estadoRespuestaSunat = estadoRespuestaSunat;
 	}
 
 	public Date getFechaGeneracion() {

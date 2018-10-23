@@ -1,20 +1,9 @@
 package com.adicse.facturador.model;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -53,6 +42,12 @@ public class DocumentoCab implements Serializable {
 
 	@Column(name="dsc_tipo_documento_cliente")
 	private String dscTipoDocumentoCliente;
+
+	@Column(name="estado_registro")
+	private String estadoRegistro;
+
+	@Column(name="estado_respuesta_sunat")
+	private Integer estadoRespuestaSunat;
 
 	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
@@ -165,6 +160,22 @@ public class DocumentoCab implements Serializable {
 
 	public void setDscTipoDocumentoCliente(String dscTipoDocumentoCliente) {
 		this.dscTipoDocumentoCliente = dscTipoDocumentoCliente;
+	}
+
+	public String getEstadoRegistro() {
+		return this.estadoRegistro;
+	}
+
+	public void setEstadoRegistro(String estadoRegistro) {
+		this.estadoRegistro = estadoRegistro;
+	}
+
+	public Integer getEstadoRespuestaSunat() {
+		return this.estadoRespuestaSunat;
+	}
+
+	public void setEstadoRespuestaSunat(Integer estadoRespuestaSunat) {
+		this.estadoRespuestaSunat = estadoRespuestaSunat;
 	}
 
 	public Date getFechaEmision() {

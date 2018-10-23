@@ -1,5 +1,6 @@
 package com.adicse.facturador.component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,11 @@ import com.adicse.facturador.modelToJson.FacturaCab;
 import com.adicse.facturador.modelToJson.FacturaDetalle;
 import com.adicse.facturador.service.DocumentoCabService;
 
+import freemarker.core.ParseException;
+import freemarker.template.MalformedTemplateNameException;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
+
 @Component
 public class ResumenBoletaComponent {
 	
@@ -22,6 +28,11 @@ public class ResumenBoletaComponent {
 	@Autowired
 	private DocumentoCabService documentoCabService;
 	
+	@Autowired
+	ServiciosCPE cerviciosCPE;
+	
+	@Autowired
+	PropiedadesComponent propiedadesComponent;
 	
 	public void saveResumenBoletaToModel(List<FacturaCab> lstFacturaCab){
 		
@@ -101,6 +112,7 @@ public class ResumenBoletaComponent {
 				
 				
 				documentoDetalle.setCodigoProducto( Long.toString( rowFacturaDetalle.getProducto().getIdProducto()) );
+				documentoDetalle.setDscProductoServicio( rowFacturaDetalle.getProducto().getDscProducto());
 				
 				
 				sumaValorVenta = sumaValorVenta + rowFacturaDetalle.getBaseImponible();
@@ -123,6 +135,7 @@ public class ResumenBoletaComponent {
 			documentoCab.setSumValorVentaExonerada(sumaValorVentaGrabada);
 			documentoCab.setSumIgv(sumaTotalDeImpuestos);
 			documentoCab.setSumTotalVenta(sumaImporteTotalVenta);
+			documentoCab.setEstadoRegistro("PEN");
 			
 			//documento detalle en la cabecera
 			documentoCab.setDocumentoDetalles(lstDocumentoDetalle);
@@ -140,4 +153,41 @@ public class ResumenBoletaComponent {
 		
 	}
 
+	/** Estado Registro PEN**/
+	public void generaXmlResumenBoleta(String estadoRegistro,String fechaEmision) {
+		
+		//Obtenemos la relacion de Boletas con estado registro PEN funcion definida en el dao DocumentoDao
+		List<DocumentoCab> lstDocumentoCab = documentoCabService.getDocumentoDaoByEstadoRegistro(estadoRegistro,fechaEmision);
+		
+		Map<String,Object> map = propiedadesComponent.getValoresDePropiedades();
+		
+		try {
+			cerviciosCPE.crearXMLCPE21ResumenBoleta(lstDocumentoCab, map.get("rutaArchivoXml").toString() , map.get("rutaArchivoFtl").toString() , map.get("nombreArchivoFtl").toString(), 
+					map.get("rutaCertificado").toString(), map.get("nombreArchivoCertificado").toString(), map.get("passFirma").toString(), 
+					map.get("UsuSol").toString() , map.get("PassSol").toString() , map.get("RutaRta").toString());
+			
+			
+		} catch (TemplateNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedTemplateNameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TemplateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	
+	}
+	
+
+	
 }

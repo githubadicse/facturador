@@ -76,7 +76,9 @@ public class DocumentoCabService implements IAdicseService<DocumentoCab, String>
 		return null;
 	}
 
-	
+	public List<DocumentoCab> getDocumentoDaoByEstadoRegistro(String estadoRegistro, String fechaEmision){
+		return iDocumentoCabDao.getDocumentoDaoByEstadoRegistro(estadoRegistro,fechaEmision);
+	}
 	
 	
 
