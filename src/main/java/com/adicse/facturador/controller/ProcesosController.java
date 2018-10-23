@@ -29,6 +29,8 @@ public class ProcesosController {
 		
 	}	
 	
+	
+	
 	@RequestMapping("/generaXmlResumen")
 	@ResponseBody
 	public void generaResumendeBoleta(@RequestParam("fecha") String fecha) {
