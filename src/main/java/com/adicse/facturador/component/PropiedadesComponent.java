@@ -56,8 +56,13 @@ public class PropiedadesComponent {
 		String rutaFilesJson = prop.getProperty("datos." + _ruc + ".rutaArchivoJson");
 
 		String rutaArchivoXml = prop.getProperty("datos." + _ruc + ".rutaArchivoXml");
+		
 		String rutaArchivoFtl = prop.getProperty("datos." + _ruc + ".rutaArchivoFtl");
 		String nombreArchivoFtl = prop.getProperty("datos." + _ruc + ".nombreArchivoFtl");
+		
+		String nombreArchivoResumenBoletaFtl = prop.getProperty("datos." + _ruc + ".nombreArchivoResumenBoletaFtl");
+		
+		
 		String rutaCertificado = prop.getProperty("datos." + _ruc + ".rutaCertificado");
 		String nombreArchivoCertificado = prop.getProperty("datos." + _ruc + ".nombreArchivoCertificado");
 		String passFirma = prop.getProperty("datos." + _ruc + ".passFirma");
@@ -72,6 +77,7 @@ public class PropiedadesComponent {
 		map.put("rutaArchivoXml", rutaArchivoXml);
 		map.put("rutaArchivoFtl", rutaArchivoFtl);
 		map.put("nombreArchivoFtl", nombreArchivoFtl);
+		map.put("nombreArchivoResumenBoletaFtl", nombreArchivoResumenBoletaFtl);
 		map.put("rutaCertificado", rutaCertificado);
 		map.put("nombreArchivoCertificado", nombreArchivoCertificado);
 		map.put("passFirma", passFirma);

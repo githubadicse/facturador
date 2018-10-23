@@ -65,20 +65,20 @@
 	
 		<#-- INFORMACION DE CADA DOCUMENTO BOLETA -->
 		<sac:SummaryDocumentsLine>
-			<cbc:LineID>${item}</cbc:LineID>
+			<cbc:LineID>${item.item}</cbc:LineID>
 			<#-- Tipo de documento - Catalogo No. 01 -->
 			<cbc:DocumentTypeCode>03</cbc:DocumentTypeCode>
 			<#-- Serie y número de comprobante -->
-			<cbc:ID>${numeroDeDocumentoEmitido}</cbc:ID>
+			<cbc:ID>${item.comprobanteEmitidoSunat}</cbc:ID>
 	
 			<cac:AccountingCustomerParty>
 				<#-- Numero de documento de identidad -->
-				<cbc:CustomerAssignedAccountID>${numeroDocumentoCliente}
+				<cbc:CustomerAssignedAccountID>${item.numeroDocumentoCliente}
 				</cbc:CustomerAssignedAccountID>
 	
 				<#-- Tipo de documento de identidad - Catalogo No. 06 si el cliente no 
 					tiene ruc ni dni el codigo es 0 -->
-				<cbc:AdditionalAccountID>${tipoDocumentoCliente}
+				<cbc:AdditionalAccountID>${item.codigoTipoDocumentoCliente}
 				</cbc:AdditionalAccountID>
 			</cac:AccountingCustomerParty>
 	
@@ -89,52 +89,55 @@
 			</cac:Status>
 	
 			<#-- Importe total de la venta, cesion en uso o del servicio prestado -->
-			<sac:TotalAmount currencyID="${tipoDeMoneda}">${sumaImporteTotalVenta}
+			<sac:TotalAmount currencyID="${item.tipoMoneda}">${item.sumTotalVenta}
 			</sac:TotalAmount>
 	
 			<#-- Total valor de venta - operaciones gravadas -->
+			<!-- Total Venta Grabadas -->
 			<sac:BillingPayment>
-				<cbc:PaidAmount currencyID="${tipoDeMoneda}">${sumaValorVentaGrabada}
+				<cbc:PaidAmount currencyID="${item.tipoMoneda}">${item.sumValorVentaGrabada}
 				</cbc:PaidAmount>
 				<cbc:InstructionID>01</cbc:InstructionID>
 			</sac:BillingPayment>
 	
 			<#-- Total valor de venta - operaciones exoneradas -->
+			<!-- Total Venta Exoneradas -->
 			<sac:BillingPayment>
-				<cbc:PaidAmount currencyID="${tipoDeMoneda}">${sumaValorVentaExonerado}
+				<cbc:PaidAmount currencyID="${item.tipoMoneda}">${item.sumValorVentaExonerada}
 				</cbc:PaidAmount>
 				<cbc:InstructionID>02</cbc:InstructionID>
 			</sac:BillingPayment>
 	
 			<#-- Total valor de venta - operaciones inafectas -->
+			<!-- Total Venta Inafectas -->
 			<sac:BillingPayment>
-				<cbc:PaidAmount currencyID="${tipoDeMoneda}">0.00</cbc:PaidAmount>
+				<cbc:PaidAmount currencyID="${item.tipoMoneda}">0.00</cbc:PaidAmount>
 				<cbc:InstructionID>03</cbc:InstructionID>
 			</sac:BillingPayment>
 	
 			<#-- Importe total de sumatoria otros cargos del item -->
 			<cac:AllowanceCharge>
 				<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-				<cbc:Amount currencyID="${tipoDeMoneda}">0.00</cbc:Amount>
+				<cbc:Amount currencyID="${item.tipoMoneda}">0.00</cbc:Amount>
 			</cac:AllowanceCharge>
 	
 			<#-- Total IGV -->
 			<cac:TaxTotal>
 	
 				<#-- Monto Total y Moneda -->
-				<cbc:TaxAmount currencyID="${tipoDeMoneda}">${sumaTotalDeImpuestos}</cbc:TaxAmount>
+				<cbc:TaxAmount currencyID="${item.tipoMoneda}">${item.sumIgv}</cbc:TaxAmount>
 				
 	  		<#-- VENTAS GRABADAS  -->
-		  	<#if sumaValorVentaGrabada gt 0.00 >			
+		  	<#if item.sumValorVentaGrabada gt 0.00 >			
 				<cac:TaxSubtotal>
 					<#-- Monto Total y Moneda -->
-					<cbc:TaxAmount currencyID="${tipoDeMoneda}">${sumaTotalDeImpuestos}</cbc:TaxAmount>
+					<cbc:TaxAmount currencyID="${item.tipoMoneda}">${item.sumIgv}</cbc:TaxAmount>
 					<cac:TaxCategory>
 						<cac:TaxScheme>
 							<#-- Codigo de tributo - Catalogo No. 05 -->
 							<cbc:ID>1000</cbc:ID>
 							<#-- Nombre de tributo - Catalogo No. 05 -->
-							<cbc:Name>${afecto}</cbc:Name>
+							<cbc:Name>IGV</cbc:Name>
 							<#-- Codigo internacional tributo - Catalogo No. 05 -->
 							<cbc:TaxTypeCode>VAT</cbc:TaxTypeCode>
 						</cac:TaxScheme>
@@ -143,16 +146,16 @@
 			</#if>
 			
 	  		<#-- VENTAS EXONERADAS  -->
-		  	<#if sumaValorVentaExonerado gt 0.00 >			
+		  	<#if item.sumValorVentaExonerada gt 0.00 >			
 				<cac:TaxSubtotal>
 					<#-- Monto Total y Moneda -->
-					<cbc:TaxAmount currencyID="${tipoDeMoneda}">${sumaTotalDeImpuestos}</cbc:TaxAmount>
+					<cbc:TaxAmount currencyID="${item.tipoMoneda}">${item.sumIgv}</cbc:TaxAmount>
 					<cac:TaxCategory>
 						<cac:TaxScheme>
 							<#-- Codigo de tributo - Catalogo No. 05 -->
 							<cbc:ID>9997</cbc:ID>
 							<#-- Nombre de tributo - Catalogo No. 05 -->
-							<cbc:Name>${afecto}</cbc:Name>
+							<cbc:Name>EXO</cbc:Name>
 							<#-- Codigo internacional tributo - Catalogo No. 05 -->
 							<cbc:TaxTypeCode>VAT</cbc:TaxTypeCode>
 						</cac:TaxScheme>
@@ -165,16 +168,16 @@
 			<#-- Total Otros tributos -->
 			<cac:TaxTotal>
 				<#-- Monto Total y Moneda -->
-				<cbc:TaxAmount currencyID="${tipoDeMoneda}">0.00</cbc:TaxAmount>
+				<cbc:TaxAmount currencyID="${item.tipoMoneda}">0.00</cbc:TaxAmount>
 				<cac:TaxSubtotal>
 					<#-- Monto Total y Moneda -->
-					<cbc:TaxAmount currencyID="${tipoDeMoneda}">0.00</cbc:TaxAmount>
+					<cbc:TaxAmount currencyID="${item.tipoMoneda}">0.00</cbc:TaxAmount>
 					<cac:TaxCategory>
 						<cac:TaxScheme>
 							<#-- Codigo de tributo - Catalogo No. 05 -->
 							<cbc:ID>9999</cbc:ID>
 							<#-- Nombre de tributo - Catalogo No. 05 -->
-							<cbc:Name>OTROS</cbc:Name>
+							<cbc:Name>OTR</cbc:Name>
 							<#-- Codigo internacional tributo - Catalogo No. 05 -->
 							<cbc:TaxTypeCode>OTH</cbc:TaxTypeCode>
 						</cac:TaxScheme>

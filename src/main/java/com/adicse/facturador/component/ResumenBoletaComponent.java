@@ -36,7 +36,7 @@ public class ResumenBoletaComponent {
 	
 	public void saveResumenBoletaToModel(List<FacturaCab> lstFacturaCab){
 		
-		Map<String,Object> map = new HashMap<String, Object>();
+		
 		
 		DocumentoCab documentoCab = null;
 
@@ -54,7 +54,7 @@ public class ResumenBoletaComponent {
 			documentoCab.setIdDocumentoCab(documento);
 			documentoCab.setFechaEmision(facturaCab.getFecha());
 			documentoCab.setFechaVencimiento(facturaCab.getFecha() );
-			documentoCab.setCodigoDocumentoSunat(documento);
+			documentoCab.setComprobanteEmitidoSunat(documento);
 			
 			//03 boleta
 			documentoCab.setCodigoDocumentoSunat("03");
@@ -133,7 +133,7 @@ public class ResumenBoletaComponent {
 			documentoCab.setSumValorVentaBruto(sumaValorVenta);
 			documentoCab.setSumTotalDescuento(sumaTotalDescuento);
 			documentoCab.setSumValorVentaGrabada(sumaValorVentaGrabada);
-			documentoCab.setSumValorVentaExonerada(sumaValorVentaGrabada);
+			documentoCab.setSumValorVentaExonerada(sumaValorVentaExonerado);
 			documentoCab.setSumIgv(sumaTotalDeImpuestos);
 			documentoCab.setSumTotalVenta(sumaImporteTotalVenta);
 			documentoCab.setEstadoRegistro("PEN");
@@ -163,9 +163,10 @@ public class ResumenBoletaComponent {
 		Map<String,Object> map = propiedadesComponent.getValoresDePropiedades();
 		
 		try {
-			cerviciosCPE.crearXMLCPE21ResumenBoleta(lstDocumentoCab, map.get("rutaArchivoXml").toString() , map.get("rutaArchivoFtl").toString() , map.get("nombreArchivoFtl").toString(), 
-					map.get("rutaCertificado").toString(), map.get("nombreArchivoCertificado").toString(), map.get("passFirma").toString(), 
-					map.get("UsuSol").toString() , map.get("PassSol").toString() , map.get("RutaRta").toString());
+			
+			cerviciosCPE.crearXMLCPE21ResumenBoleta(lstDocumentoCab, (String)map.get("rutaArchivoXml")+"ResumenDeBoleta" , (String)map.get("rutaArchivoFtl") , (String)map.get("nombreArchivoResumenBoletaFtl"), 
+					(String)map.get("rutaCertificado"), (String)map.get("nombreArchivoCertificado"), (String)map.get("passFirma"), 
+					(String)map.get("UsuSol") ,(String) map.get("PassSol") , (String)map.get("RutaRta"));
 			
 			
 		} catch (TemplateNotFoundException e) {

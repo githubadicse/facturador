@@ -1,6 +1,12 @@
 package com.adicse.facturador.service;
 
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +83,20 @@ public class DocumentoCabService implements IAdicseService<DocumentoCab, String>
 	}
 
 	public List<DocumentoCab> getDocumentoDaoByEstadoRegistro(String estadoRegistro, String fechaEmision){
-		return iDocumentoCabDao.getDocumentoDaoByEstadoRegistro(estadoRegistro,fechaEmision);
+
+		
+		DateFormat sourceFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String dateAsString = fechaEmision;
+		Date date = null;
+		try {
+			date =  sourceFormat.parse(dateAsString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		return iDocumentoCabDao.getDocumentoDaoByEstadoRegistro(estadoRegistro,date);
 	}
 	
 	

@@ -27,6 +27,9 @@ public class ResumenBoleta implements Serializable {
 	@Column(name="fecha_generacion")
 	private Date fechaGeneracion;
 
+	@Column(name="numero_envio")
+	private Integer numeroEnvio;
+
 	//bi-directional many-to-one association to DocumentoCab
 	@OneToMany(mappedBy="resumenBoleta")
 	private List<DocumentoCab> documentoCabs;
@@ -56,6 +59,14 @@ public class ResumenBoleta implements Serializable {
 
 	public void setFechaGeneracion(Date fechaGeneracion) {
 		this.fechaGeneracion = fechaGeneracion;
+	}
+
+	public Integer getNumeroEnvio() {
+		return this.numeroEnvio;
+	}
+
+	public void setNumeroEnvio(Integer numeroEnvio) {
+		this.numeroEnvio = numeroEnvio;
 	}
 
 	public List<DocumentoCab> getDocumentoCabs() {

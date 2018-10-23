@@ -5,8 +5,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 
 /**
  * The persistent class for the documento_cab database table.
@@ -27,6 +25,9 @@ public class DocumentoCab implements Serializable {
 
 	@Column(name="codigo_tipo_documento_cliente")
 	private Integer codigoTipoDocumentoCliente;
+
+	@Column(name="codigo_tipo_tributo_cat05")
+	private String codigoTipoTributoCat05;
 
 	@Column(name="comprobante_emitido_sunat")
 	private String comprobanteEmitidoSunat;
@@ -52,12 +53,10 @@ public class DocumentoCab implements Serializable {
 	@Column(name="estado_respuesta_sunat")
 	private Integer estadoRespuestaSunat;
 
-	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_emision")
 	private Date fechaEmision;
 
-	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
@@ -66,6 +65,9 @@ public class DocumentoCab implements Serializable {
 
 	@Column(name="nombre_cliente")
 	private String nombreCliente;
+
+	@Column(name="nombre_tributo_cat05")
+	private String nombreTributoCat05;
 
 	@Column(name="numero_documento_cliente")
 	private String numeroDocumentoCliente;
@@ -100,7 +102,7 @@ public class DocumentoCab implements Serializable {
 	private ResumenBoleta resumenBoleta;
 
 	//bi-directional many-to-one association to DocumentoDetalle
-	@OneToMany(mappedBy="documentoCab", cascade={CascadeType.ALL})
+	@OneToMany(mappedBy="documentoCab")
 	private List<DocumentoDetalle> documentoDetalles;
 
 	public DocumentoCab() {
@@ -128,6 +130,14 @@ public class DocumentoCab implements Serializable {
 
 	public void setCodigoTipoDocumentoCliente(Integer codigoTipoDocumentoCliente) {
 		this.codigoTipoDocumentoCliente = codigoTipoDocumentoCliente;
+	}
+
+	public String getCodigoTipoTributoCat05() {
+		return this.codigoTipoTributoCat05;
+	}
+
+	public void setCodigoTipoTributoCat05(String codigoTipoTributoCat05) {
+		this.codigoTipoTributoCat05 = codigoTipoTributoCat05;
 	}
 
 	public String getComprobanteEmitidoSunat() {
@@ -224,6 +234,14 @@ public class DocumentoCab implements Serializable {
 
 	public void setNombreCliente(String nombreCliente) {
 		this.nombreCliente = nombreCliente;
+	}
+
+	public String getNombreTributoCat05() {
+		return this.nombreTributoCat05;
+	}
+
+	public void setNombreTributoCat05(String nombreTributoCat05) {
+		this.nombreTributoCat05 = nombreTributoCat05;
 	}
 
 	public String getNumeroDocumentoCliente() {

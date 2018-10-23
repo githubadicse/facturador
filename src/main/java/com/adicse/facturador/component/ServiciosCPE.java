@@ -3,6 +3,7 @@ package com.adicse.facturador.component;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ import com.adicse.facturador.model.DocumentoDetalle;
 import com.adicse.facturador.modelToJson.FacturaCab;
 import com.adicse.facturador.modelToJson.FacturaDetalle;
 import com.adicse.facturador.service.DocumentoCabService;
+import com.adicse.facturador.service.ResumenBoletaService;
 
 import freemarker.core.ParseException;
 import freemarker.template.Configuration;
@@ -61,6 +63,9 @@ public class ServiciosCPE {
 	
 	@Autowired
 	DocumentoCabService documentoCabService;
+	
+	@Autowired
+	ResumenBoletaService resumenBoletaService;
 
 	public void crearXMLCPE21(FacturaCab facturaCab, String rutaArchivoXml, String rutaArchivoFtl,
 			String nombreArchivoFtl, String rutaCertificado, String nombreArchivoCertificado, String passFirma,
@@ -171,16 +176,15 @@ public class ServiciosCPE {
 		String fechaEmision = fd.format(facturaCab.getFechaEmision()).replace("-", "");
 		String ruc = facturaCab.getNumeroDocumentoCliente();
 
-		String documento = "B" + String.format("%03d", facturaCab.getComprobanteSerie()) + "-"
-				+ String.format("%08d", facturaCab.getComprobanteNumero());
+		String documento = "B" +  facturaCab.getComprobanteSerie() + "-"+ facturaCab.getComprobanteNumero();
 
 		String nombreArchivo = "RC" + fechaEmision + "00001";
 
 		File fileXml = new File(rutaArchivoXml + "/" + nombreArchivo + ".xml");
 
-		/**
-		 * -- Definicion de la plantilla a usar para pasar el modelo de datos --
-		 **/
+		
+		// Definicion de la plantilla a usar para pasar el modelo de datos --
+		
 		Configuration cfg = new Configuration(new Version("2.3.23"));
 
 		try {
@@ -195,9 +199,9 @@ public class ServiciosCPE {
 		// Template template = cfg.getTemplate("resumenDiarioXmlUbl20.ftl");
 		Template template = cfg.getTemplate(nombreArchivoFtl);
 
-		/** ---------- Fin definicion del archivo plantilla ------------ **/
 
-		Writer file = new FileWriter(new File(rutaArchivoXml + "/" + nombreArchivo));
+
+		//Writer file = new FileWriter(new File(rutaArchivoXml + "/" + nombreArchivo+ ".xml"));
 
 		Map<String, Object> map = new HashMap<>();
 		Integer item = 1;
@@ -208,11 +212,49 @@ public class ServiciosCPE {
 
 		}
 
+		LocalDate localDate = LocalDate.now();
+		LocalDateTime localDateTime = LocalDateTime.now();
+		ZoneId zoneId = ZoneId.of("America/Lima");
+
+		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, zoneId);
+
+		Integer dia = localDate.getDayOfMonth();
+		Integer mes = localDate.getMonth().getValue();
+		Integer anno = localDate.getYear();		
+		
+		String fechaCreacion = String.format("%04d",anno)+ String.format("%02d",mes) + String.format("%02d",dia);
+		
+		Integer nexId = resumenBoletaService.getMax();
+		String identificadorArchivoEnvio =  "RC-" + fechaCreacion + "-"+String.format("%04d", nexId );
+		map = this.setResumenBoleta(lstDocumentoCab, identificadorArchivoEnvio);
+		
+		
+		// Console output
+		Writer console = new OutputStreamWriter(System.out);
+
+		 template.process(map, console);
+		 console.flush();
+
+		// File output
+
+		Writer file = new FileWriter(new File(rutaArchivoXml + "/" + nombreArchivo + ".XML"));
 		template.process(map, file);
+		file.flush();
+		file.close();
+		 
+				
+
 
 	}
 
-	///////
+
+	
+	
+	
+	
+	
+	
+	
 	
 	public Map<String, Object> setResumenBoleta(List<DocumentoCab> lstDocumentoCab, String identificadorArchivoEnvio) {
 		Map<String, Object> map = new HashMap<>();
