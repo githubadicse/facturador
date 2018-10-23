@@ -5,6 +5,8 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 /**
  * The persistent class for the documento_cab database table.
@@ -47,10 +49,12 @@ public class DocumentoCab implements Serializable {
 	@Column(name="estado_respuesta_sunat")
 	private Integer estadoRespuestaSunat;
 
+	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_emision")
 	private Date fechaEmision;
 
+	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
@@ -93,7 +97,7 @@ public class DocumentoCab implements Serializable {
 	private ResumenBoleta resumenBoleta;
 
 	//bi-directional many-to-one association to DocumentoDetalle
-	@OneToMany(mappedBy="documentoCab")
+	@OneToMany(mappedBy="documentoCab", cascade={CascadeType.ALL})
 	private List<DocumentoDetalle> documentoDetalles;
 
 	public DocumentoCab() {
