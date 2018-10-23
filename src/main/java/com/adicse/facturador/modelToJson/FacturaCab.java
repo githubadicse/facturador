@@ -45,7 +45,8 @@ public class FacturaCab implements Serializable {
 	private String emisorRuc;
 	private String emisorDireccion;	
 	
-
+	private String tipoMoneda;
+	
 
 	public Integer getSerie() {
 		return serie;
@@ -144,6 +145,14 @@ public class FacturaCab implements Serializable {
 
 	public void setEmisorDireccion(String emisorDireccion) {
 		this.emisorDireccion = emisorDireccion;
+	}
+
+	public String getTipoMoneda() {
+		return tipoMoneda;
+	}
+
+	public void setTipoMoneda(String tipoMoneda) {
+		this.tipoMoneda = tipoMoneda;
 	}
 
 	

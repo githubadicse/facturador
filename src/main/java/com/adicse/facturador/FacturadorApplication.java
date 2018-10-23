@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.adicse.facturador.component.FileComponent;
 import com.adicse.facturador.component.MAINComponent;
@@ -61,6 +62,14 @@ public class FacturadorApplication implements CommandLineRunner {
 	
 	@Autowired
 	MAINComponent mainComponent;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;	
+	
+	@Bean
+	public BCryptPasswordEncoder  passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}		
 	
 	public static void main(String[] args) {
 		SpringApplication.run(FacturadorApplication.class, args);
