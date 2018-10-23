@@ -5,6 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,8 +23,10 @@ import org.springframework.stereotype.Component;
 
 import com.adicse.facturador.cpe.model.CamposDetalle;
 import com.adicse.facturador.model.DocumentoCab;
+import com.adicse.facturador.model.DocumentoDetalle;
 import com.adicse.facturador.modelToJson.FacturaCab;
 import com.adicse.facturador.modelToJson.FacturaDetalle;
+import com.adicse.facturador.service.DocumentoCabService;
 
 import freemarker.core.ParseException;
 import freemarker.template.Configuration;
@@ -49,6 +55,12 @@ public class ServiciosCPE {
 
 	@Autowired
 	private ProcesosRespuestaSunat procesosRespuestaSunat;
+	
+	@Autowired
+	PropiedadesComponent propiedadesComponent;
+	
+	@Autowired
+	DocumentoCabService documentoCabService;
 
 	public void crearXMLCPE21(FacturaCab facturaCab, String rutaArchivoXml, String rutaArchivoFtl,
 			String nombreArchivoFtl, String rutaCertificado, String nombreArchivoCertificado, String passFirma,
@@ -144,31 +156,30 @@ public class ServiciosCPE {
 
 	/////// PROCEDIMIENTO PARA CREAR EL RESUMEN DE BOLETAS ///////////////
 
-	public void crearXMLCPE21ResumenBoleta(List<DocumentoCab> lstDocumentoCab, String rutaArchivoXml, String rutaArchivoFtl,
-			String nombreArchivoFtl, String rutaCertificado, String nombreArchivoCertificado, String passFirma,
-			String UsuSol, String PassSol, String RutaRta)
+	public void crearXMLCPE21ResumenBoleta(List<DocumentoCab> lstDocumentoCab, String rutaArchivoXml,
+			String rutaArchivoFtl, String nombreArchivoFtl, String rutaCertificado, String nombreArchivoCertificado,
+			String passFirma, String UsuSol, String PassSol, String RutaRta)
 
 			throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException,
 			TemplateException {
 
-		SimpleDateFormat fd = new SimpleDateFormat("yyyy-MM-dd");
 		
+		
+		SimpleDateFormat fd = new SimpleDateFormat("yyyy-MM-dd");
+
 		DocumentoCab facturaCab = lstDocumentoCab.get(0);
-		String fechaEmision = fd.format(facturaCab.getFechaEmision()).replace("-", "") ;
+		String fechaEmision = fd.format(facturaCab.getFechaEmision()).replace("-", "");
 		String ruc = facturaCab.getNumeroDocumentoCliente();
 
-		String documento = "B" + String.format("%03d", facturaCab.getComprobanteSerie() ) + "-"
-				+ String.format("%08d", facturaCab.getComprobanteNumero() );
+		String documento = "B" + String.format("%03d", facturaCab.getComprobanteSerie()) + "-"
+				+ String.format("%08d", facturaCab.getComprobanteNumero());
 
 		String nombreArchivo = "RC" + fechaEmision + "00001";
-		
+
 		File fileXml = new File(rutaArchivoXml + "/" + nombreArchivo + ".xml");
-		
-		
 
 		/**
-		 * -- Definicion de la plantilla a usar para pasar el modelo de datos
-		 * --
+		 * -- Definicion de la plantilla a usar para pasar el modelo de datos --
 		 **/
 		Configuration cfg = new Configuration(new Version("2.3.23"));
 
@@ -185,16 +196,16 @@ public class ServiciosCPE {
 		Template template = cfg.getTemplate(nombreArchivoFtl);
 
 		/** ---------- Fin definicion del archivo plantilla ------------ **/
-		
-		
 
 		Writer file = new FileWriter(new File(rutaArchivoXml + "/" + nombreArchivo));
 
 		Map<String, Object> map = new HashMap<>();
+		Integer item = 1;
 		for (DocumentoCab rowDocumentoCab : lstDocumentoCab) {
-			// Obetnemos los datos de la cabecera 
+			rowDocumentoCab.setItem(item);
+			item ++;
+			documentoCabService.save(rowDocumentoCab);
 
-			
 		}
 
 		template.process(map, file);
@@ -202,6 +213,41 @@ public class ServiciosCPE {
 	}
 
 	///////
+	
+	public Map<String, Object> setResumenBoleta(List<DocumentoCab> lstDocumentoCab, String identificadorArchivoEnvio) {
+		Map<String, Object> map = new HashMap<>();
+		
+		Map<String, Object> props = propiedadesComponent.getValoresDePropiedades();
+		// Definimos la fecha de trabajo segun el reloj del servidor
+		LocalDate localDate = LocalDate.now();
+		
+		SimpleDateFormat fd = new SimpleDateFormat("yyyy-MM-dd");
+
+		Integer dia = localDate.getDayOfMonth();
+		Integer mes = localDate.getMonth().getValue();
+		Integer anno = localDate.getYear();
+		String fechaGeneracionResumen = anno+"-"+mes+"-"+dia;
+		
+		DocumentoCab documentoCab = lstDocumentoCab.get(0);
+		
+		map.put("identificadorArchivoEnvio", identificadorArchivoEnvio);
+		map.put("fechaeGeneracionResumen", fechaGeneracionResumen);
+		map.put("fechaEmisionDocumentos", fd.format(documentoCab.getFechaEmision()));
+		map.put("rucEmisor", props.get("rucEmisor") );
+		
+		map.put("rucEmisor", props.get("rucEmisor").toString() );
+		map.put("emisor", props.get("nombreEmisor").toString() );
+		
+		
+		
+		
+		map.put("detalleLineas", lstDocumentoCab );
+		
+		
+		
+		return map;
+		
+	}
 
 	public Map<String, Object> setCabecera(FacturaCab facturaCab) {
 		Map<String, Object> map = new HashMap<>();

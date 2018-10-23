@@ -191,8 +191,6 @@
 	<#--                 DETALLE DEL DOCUMENTO                       -->
 	<#list detalleLineas as item>
 
-	  
-
 		  <cac:InvoiceLine> 
 		    <cbc:ID>${item.item}</cbc:ID> 
 		    

@@ -5,8 +5,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 
 /**
  * The persistent class for the documento_cab database table.
@@ -49,15 +47,15 @@ public class DocumentoCab implements Serializable {
 	@Column(name="estado_respuesta_sunat")
 	private Integer estadoRespuestaSunat;
 
-	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_emision")
 	private Date fechaEmision;
 
-	@JsonFormat (pattern ="dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
+
+	private Integer item;
 
 	@Column(name="nombre_cliente")
 	private String nombreCliente;
@@ -86,13 +84,16 @@ public class DocumentoCab implements Serializable {
 	@Column(name="sum_valor_venta_grabada")
 	private double sumValorVentaGrabada;
 
+	@Column(name="tipo_moneda")
+	private String tipoMoneda;
+
 	//bi-directional many-to-one association to ResumenBoleta
 	@ManyToOne
 	@JoinColumn(name="id_resumen_boleta")
 	private ResumenBoleta resumenBoleta;
 
 	//bi-directional many-to-one association to DocumentoDetalle
-	@OneToMany(mappedBy="documentoCab", cascade={CascadeType.ALL})
+	@OneToMany(mappedBy="documentoCab")
 	private List<DocumentoDetalle> documentoDetalles;
 
 	public DocumentoCab() {
@@ -194,6 +195,14 @@ public class DocumentoCab implements Serializable {
 		this.fechaVencimiento = fechaVencimiento;
 	}
 
+	public Integer getItem() {
+		return this.item;
+	}
+
+	public void setItem(Integer item) {
+		this.item = item;
+	}
+
 	public String getNombreCliente() {
 		return this.nombreCliente;
 	}
@@ -264,6 +273,14 @@ public class DocumentoCab implements Serializable {
 
 	public void setSumValorVentaGrabada(double sumValorVentaGrabada) {
 		this.sumValorVentaGrabada = sumValorVentaGrabada;
+	}
+
+	public String getTipoMoneda() {
+		return this.tipoMoneda;
+	}
+
+	public void setTipoMoneda(String tipoMoneda) {
+		this.tipoMoneda = tipoMoneda;
 	}
 
 	public ResumenBoleta getResumenBoleta() {

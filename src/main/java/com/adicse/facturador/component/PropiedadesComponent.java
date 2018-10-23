@@ -64,6 +64,10 @@ public class PropiedadesComponent {
 		String UsuSol = prop.getProperty("datos." + _ruc + ".UsuSol");
 		String PassSol = prop.getProperty("datos." + _ruc + ".PassSol");
 		
+		String nombreEmisor = prop.getProperty("datos." + _ruc + ".nombreEmisor");
+		
+		map.put("rucEmisor", _ruc);
+		map.put("nombreEmisor", nombreEmisor);
 		map.put("rutaFilesJson", rutaFilesJson);
 		map.put("rutaArchivoXml", rutaArchivoXml);
 		map.put("rutaArchivoFtl", rutaArchivoFtl);
